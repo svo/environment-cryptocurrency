@@ -1,0 +1,195 @@
+
+    - name: Create Installs directory
+      file: path=~/Installs state=directory
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Symlink ~/Installs
+      file: src=~/Installs dest=/tmp/Installs state=link
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Download Ethereum wallet
+      get_url: url=https://github.com/ethereum/mist/releases/download/v0.8.10/Ethereum-Wallet-linux64-0-8-10.deb dest=~/Installs/Ethereum-Wallet-linux64-0-8-10.deb checksum=sha256:66b6d15089b4f5e2261bd80f3b59ac92c8f1482871a7eff0d6099e7efceeee4c
+      register: get_url_result
+      until: get_url_result | succeeded
+      retries: 3
+      delay: 1
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Install Ethereum wallet
+      apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-8-10.deb
+      become: yes
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Download Factom
+      get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} checksum={{ item.sha }}
+      with_items:
+      - {url: "https://github.com/FactomProject/distribution/releases/download/v0.4.2.2/factom-amd64.deb", name: factom-amd64.deb, sha: "sha256:e7cb8c24bec50362e118ebc14f530a705a62a582c60ecfd8be3ba85f8cc8003e"}
+      - {url: "https://github.com/FactomProject/distribution/releases/download/v0.4.2.1/enterprise-wallet-setup-amd64.deb", name: enterprise-wallet-setup-amd64.deb, sha: "sha256:31d563deae91513e9fdede8a7a57754f0c112de0a4ec3947de99f5793d6ec33c"}
+      register: get_url_result
+      until: get_url_result | succeeded
+      retries: 3
+      delay: 1
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Install Factom
+      apt: deb=/tmp/Installs/{{ item }}
+      become: yes
+      with_items:
+      - factom-amd64.deb
+      - enterprise-wallet-setup-amd64.deb
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Download VeriCoin installer
+      get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} mode=a+x
+      with_items:
+      - {url: "http://www.vericoin.info/downloads/VeriCoin_1.6.5.5_64bit.run", name: VeriCoin_1.6.5.5_64bit.run}
+      - {url: "http://www.vericoin.info/downloads/Verium_1.0.4_64bit.run", name: Verium_1.0.4_64bit.run}
+
+      register: get_url_result
+      until: get_url_result | succeeded
+      retries: 3
+      delay: 1
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Add ethereum repositories
+      apt_repository: repo={{ item }} update_cache=yes
+      become: yes
+      with_items:
+      - ppa:ethereum/ethereum
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Install CryptoPP
+      apt: pkg={{ item }}
+      become: yes
+      with_items:
+      - libcryptopp-utils
+      - libcryptopp-dev
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Install ethereum CLI tools
+      apt: pkg={{ item }}
+      become: yes
+      with_items:
+      - ethereum
+      - ethminer
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Get cpp-ethereum
+      git: repo=https://github.com/Genoil/cpp-ethereum/ dest=~/cpp-ethereum
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Setup build directory
+      file: path=~/cpp-ethereum/build state=directory
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: cmake cpp-ethereum
+      command: cmake -DBUNDLE=cudaminer .. chdir=~/cpp-ethereum/build
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: make cpp-ethereum
+      command: make -j8 chdir=~/cpp-ethereum/build
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Get silentarmy
+      git: repo=https://github.com/mbevand/silentarmy.git dest=~/silentarmy force=yes
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Update silentarmy config
+      lineinfile: dest=~/silentarmy/Makefile regexp='{{ item.regexp }}' line='{{ item.line }}'
+      with_items:
+      - {regexp: '^OPENCL_HEADERS', line: 'OPENCL_HEADERS = "/usr/include"'}
+      - {regexp: '^LIBOPENCL', line: 'LIBOPENCL = "/usr/local/cuda-8.0/targets/x86_64-linux/lib"'}
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: make silentarmy
+      command: make chdir=~/silentarmy
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: make test silentarmy
+      command: make test chdir=~/silentarmy
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Add Zcash apt key
+      apt_key: url=https://apt.z.cash/zcash.asc
+      tags:
+      - cryptocurrency
+      - run
+      become: yes
+
+    - name: Install Zcash repository
+      apt_repository: repo="deb https://apt.z.cash/ jessie main"
+      tags:
+      - cryptocurrency
+      - run
+      become: yes
+
+    - name: Install Zcash
+      apt: pkg=zcash update_cache=yes
+      tags:
+      - cryptocurrency
+      - run
+      become: yes
+
+    - name: Get cpuminer-opt
+      git: repo=https://github.com/JayDDee/cpuminer-opt.git dest=~/cpuminer-opt force=yes
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Build cpuminer
+      command: ./build.sh chdir=~/cpuminer-opt
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Get DASH wallet
+      get_url: url=https://www.dash.org/binaries/dashcore-0.12.1.5-linux64.tar.gz dest=~/Installs/dashcore-0.12.1.5-linux64.tar.gz
+      register: dash_get_url_result
+      until: dash_get_url_result | succeeded
+      retries: 3
+      delay: 1
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Extract DASH wallet
+      unarchive: src=~/Installs/dashcore-0.12.1.5-linux64.tar.gz remote_src=yes dest=~/
+      tags:
+      - cryptocurrency
+      - run
