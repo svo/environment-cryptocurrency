@@ -231,3 +231,20 @@
       tags:
       - cryptocurrency
       - run
+
+    - name: Download Storj GUI
+      get_url: url=https://github.com/Storj/storjshare-gui/releases/download/v5.1.0/storjshare-gui.amd64.deb dest=~/Installs/storjshare-gui.amd64.deb checksum=sha256:ace4dd7063e7419ffa6074185f2b3e91a5c31992987c31849cf1e9502765cfa7
+      register: get_url_result
+      until: get_url_result | succeeded
+      retries: 3
+      delay: 1
+      tags:
+      - cryptocurrency
+      - run
+
+    - name: Install Storj GUI
+      apt: deb=/tmp/Installs/storjshare-gui.amd64.deb
+      become: yes
+      tags:
+      - cryptocurrency
+      - run
