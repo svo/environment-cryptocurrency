@@ -248,3 +248,10 @@
       tags:
       - cryptocurrency
       - run
+
+    - name: Install Storj Daemon
+      command: snap install storjshare
+      become: yes
+      tags:
+      - cryptocurrency
+      - run
