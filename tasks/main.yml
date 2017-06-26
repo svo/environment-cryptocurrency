@@ -1,11 +1,4 @@
 
-    - name: Install Zcash repository
-      apt_repository: repo="deb https://apt.z.cash/ jessie main" state=absent
-      tags:
-      - cryptocurrency
-      - run
-      become: yes
-
     - name: Add ethereum repositories
       apt_repository: repo={{ item }} update_cache=yes
       become: yes
@@ -188,20 +181,6 @@
       tags:
       - cryptocurrency
       - run
-
-    - name: Add Zcash apt key
-      apt_key: id=9C1B2FA2 state=absent
-      tags:
-      - cryptocurrency
-      - run
-      become: yes
-
-    - name: Install Zcash
-      apt: pkg=zcash update_cache=yes state=absent
-      tags:
-      - cryptocurrency
-      - run
-      become: yes
 
     - name: Get cpuminer-opt
       git: repo=https://github.com/JayDDee/cpuminer-opt.git dest=~/cpuminer-opt force=yes
