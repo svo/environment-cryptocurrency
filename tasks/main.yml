@@ -233,3 +233,16 @@
       tags:
       - cryptocurrency
       - run
+
+    - name: Download Waves wallet
+      get_url: url=https://github.com/wavesplatform/WavesGUI/releases/download/v0.4.27/waves-lite-client-mainnet-v0.4.27.zip dest=~/Installs/waves-lite-client-mainnet-v0.4.27.zip
+      register: waves_get_url_result
+      until: waves_get_url_result | succeeded
+      retries: 3
+      delay: 1
+
+    - name: Create Waves wallet directory
+      file: path=~/waves state=directory
+
+    - name: Extract Waves wallet
+      unarchive: src=~/Installs/waves-lite-client-mainnet-v0.4.27.zip remote_src=yes dest=~/waves
