@@ -58,7 +58,7 @@
       - run
 
     - name: Download Ethereum wallet
-      get_url: url=https://github.com/ethereum/mist/releases/download/v0.8.10/Ethereum-Wallet-linux64-0-8-10.deb dest=~/Installs/Ethereum-Wallet-linux64-0-8-10.deb checksum=sha256:66b6d15089b4f5e2261bd80f3b59ac92c8f1482871a7eff0d6099e7efceeee4c
+      get_url: url=https://github.com/ethereum/mist/releases/download/v0.9.0/Ethereum-Wallet-linux64-0-9-0.deb dest=~/Installs/Ethereum-Wallet-linux64-0-9-0.deb checksum=md5:341d005af32a0848a261d4c632744017
       register: get_url_result
       until: get_url_result | succeeded
       retries: 3
@@ -68,7 +68,7 @@
       - run
 
     - name: Install Ethereum wallet
-      apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-8-10.deb
+      apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-9-0.deb
       become: yes
       tags:
       - cryptocurrency
@@ -235,7 +235,7 @@
       - run
 
     - name: Download Waves wallet
-      get_url: url=https://github.com/wavesplatform/WavesGUI/releases/download/v0.4.27/waves-lite-client-mainnet-v0.4.27.zip dest=~/Installs/waves-lite-client-mainnet-v0.4.27.zip
+      get_url: url=https://github.com/wavesplatform/WavesGUI/releases/download/v0.4.34/waves-lite-client-mainnet-v0.4.34.zip dest=~/Installs/waves-lite-client-mainnet-v0.4.34.zip
       register: waves_get_url_result
       until: waves_get_url_result | succeeded
       retries: 3
@@ -245,4 +245,4 @@
       file: path=~/waves state=directory
 
     - name: Extract Waves wallet
-      unarchive: src=~/Installs/waves-lite-client-mainnet-v0.4.27.zip remote_src=yes dest=~/waves
+      unarchive: src=~/Installs/waves-lite-client-mainnet-v0.4.34.zip remote_src=yes dest=~/waves
