@@ -58,7 +58,7 @@
       - run
 
     - name: Download Ethereum wallet
-      get_url: url=https://github.com/ethereum/mist/releases/download/v0.9.0/Ethereum-Wallet-linux64-0-9-0.deb dest=~/Installs/Ethereum-Wallet-linux64-0-9-0.deb checksum=md5:341d005af32a0848a261d4c632744017
+      get_url: url=https://github.com/ethereum/mist/releases/download/v0.9.2/Ethereum-Wallet-linux64-0-9-2.deb dest=~/Installs/Ethereum-Wallet-linux64-0-9-2.deb checksum=sha256:4cd4cd7b7acfc4e72ffece7c63e685a87cd13de68957f98e1d20e262449d4c1e
       register: get_url_result
       until: get_url_result | succeeded
       retries: 3
@@ -68,7 +68,7 @@
       - run
 
     - name: Install Ethereum wallet
-      apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-9-0.deb
+      apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-9-2.deb
       become: yes
       tags:
       - cryptocurrency
@@ -100,8 +100,8 @@
     - name: Download VeriCoin installer
       get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} mode=a+x
       with_items:
-      - {url: "http://www.vericoin.info/downloads/VeriCoin_1.6.5.5_64bit.run", name: VeriCoin_1.6.5.5_64bit.run}
-      - {url: "http://www.vericoin.info/downloads/Verium_1.0.4_64bit.run", name: Verium_1.0.4_64bit.run}
+        - {url: "http://www.vericoin.info/downloads/VeriCoin_1.6.5.5_64bit.run", name: VeriCoin_1.6.5.5_64bit.run}
+        - {url: "http://www.vericoin.info/downloads/Verium_1.1_64bit.run", name: Verium_1.1_64bit.run}
 
       register: get_url_result
       until: get_url_result | succeeded
