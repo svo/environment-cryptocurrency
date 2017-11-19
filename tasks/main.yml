@@ -100,7 +100,7 @@
     - name: Download VeriCoin installer
       get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} mode=a+x
       with_items:
-        - {url: "http://www.vericoin.info/downloads/VeriCoin_1.6.5.5_64bit.run", name: VeriCoin_1.6.5.5_64bit.run}
+        - {url: "http://www.vericoin.info/downloads/VeriCoin_1.7_64bit.run", name: VeriCoin_1.7_64bit.run}
         - {url: "http://www.vericoin.info/downloads/Verium_1.1_64bit.run", name: Verium_1.1_64bit.run}
 
       register: get_url_result
