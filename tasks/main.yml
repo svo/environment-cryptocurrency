@@ -58,7 +58,7 @@
       - run
 
     - name: Download Ethereum wallet
-      get_url: url=https://github.com/ethereum/mist/releases/download/v0.9.2/Ethereum-Wallet-linux64-0-9-2.deb dest=~/Installs/Ethereum-Wallet-linux64-0-9-2.deb checksum=sha256:4cd4cd7b7acfc4e72ffece7c63e685a87cd13de68957f98e1d20e262449d4c1e
+      get_url: url=https://github.com/ethereum/mist/releases/download/v0.9.3/Ethereum-Wallet-linux64-0-9-3.deb dest=~/Installs/Ethereum-Wallet-linux64-0-9-3.deb checksum=sha256:946b4b7dec1b6f2b58b6ef21d06a12dcee691fa2186baad7d99872f94240ced8
       register: get_url_result
       until: get_url_result | succeeded
       retries: 3
@@ -68,7 +68,7 @@
       - run
 
     - name: Install Ethereum wallet
-      apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-9-2.deb
+      apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-9-3.deb
       become: yes
       tags:
       - cryptocurrency
