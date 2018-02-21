@@ -4,9 +4,6 @@
       become: yes
       with_items:
       - ppa:ethereum/ethereum
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Install base packages
       apt: pkg={{ item }}
@@ -41,21 +38,12 @@
       - python-gpgme
       - python-pip
       - python-software-properties
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Create Installs directory
       file: path=~/Installs state=directory
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Symlink ~/Installs
       file: src=~/Installs dest=/tmp/Installs state=link
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Download Ethereum wallet
       get_url: url=https://github.com/ethereum/mist/releases/download/v0.9.3/Ethereum-Wallet-linux64-0-9-3.deb dest=~/Installs/Ethereum-Wallet-linux64-0-9-3.deb checksum=sha256:946b4b7dec1b6f2b58b6ef21d06a12dcee691fa2186baad7d99872f94240ced8
@@ -63,16 +51,10 @@
       until: get_url_result | succeeded
       retries: 3
       delay: 1
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Install Ethereum wallet
       apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-9-3.deb
       become: yes
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Download Factom
       get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} checksum={{ item.sha }}
@@ -83,9 +65,6 @@
       until: get_url_result | succeeded
       retries: 3
       delay: 1
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Install Factom
       apt: deb=/tmp/Installs/{{ item }}
@@ -93,9 +72,6 @@
       with_items:
       - factom-amd64.deb
       - enterprise-wallet-setup-amd64.deb
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Download VeriCoin installer
       get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} mode=a+x
@@ -107,9 +83,6 @@
       until: get_url_result | succeeded
       retries: 3
       delay: 1
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Install CryptoPP
       apt: pkg={{ item }}
@@ -117,30 +90,18 @@
       with_items:
       - libcryptopp-utils
       - libcryptopp-dev
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Install ethereum CLI tools
       apt: pkg={{ item }}
       become: yes
       with_items:
       - ethereum
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Get cpuminer-opt
       git: repo=https://github.com/JayDDee/cpuminer-opt.git dest=~/cpuminer-opt force=yes
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Build cpuminer
       command: ./build.sh chdir=~/cpuminer-opt
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Get DASH wallet
       get_url: url=https://www.dash.org/binaries/dashcore-0.12.1.5-linux64.tar.gz dest=~/Installs/dashcore-0.12.1.5-linux64.tar.gz
@@ -148,15 +109,9 @@
       until: dash_get_url_result | succeeded
       retries: 3
       delay: 1
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Extract DASH wallet
       unarchive: src=~/Installs/dashcore-0.12.1.5-linux64.tar.gz remote_src=yes dest=~/
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Download Storj GUI
       get_url: url=https://github.com/Storj/storjshare-gui/releases/download/v5.1.0/storjshare-gui.amd64.deb dest=~/Installs/storjshare-gui.amd64.deb checksum=sha256:ace4dd7063e7419ffa6074185f2b3e91a5c31992987c31849cf1e9502765cfa7
@@ -164,23 +119,14 @@
       until: get_url_result | succeeded
       retries: 3
       delay: 1
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Install Storj GUI
       apt: deb=/tmp/Installs/storjshare-gui.amd64.deb
       become: yes
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Install Storj Daemon
       command: snap install storjshare
       become: yes
-      tags:
-      - cryptocurrency
-      - run
 
     - name: Download Waves wallet
       get_url: url=https://github.com/wavesplatform/WavesGUI/releases/download/v0.4.34/waves-lite-client-mainnet-v0.4.34.zip dest=~/Installs/waves-lite-client-mainnet-v0.4.34.zip

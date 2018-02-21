@@ -3,8 +3,17 @@
 
 VAGRANTFILE_API_VERSION = "2"
 
+unless Vagrant.has_plugin?("vagrant-cachier")
+  puts "Install vagrant-cachier"
+  exec 'vagrant plugin install vagrant-cachier && vagrant up'
+end
+
+unless Vagrant.has_plugin?("vagrant-vbguest")
+  puts "Install vagrant-vbguest"
+  exec 'vagrant plugin install vagrant-vbguest && vagrant up'
+end
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box_url = "https://Vagrantcloud.com/ubuntu/trusty64"
   config.vm.box = "ubuntu/xenial64"
 
   config.vm.hostname = "vagrant-cryptocurrency"
@@ -14,7 +23,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "playbook.yml"
-    ansible.tags = "cryptocurrency"
   end
 
   if Vagrant.has_plugin?("vagrant-cachier")
@@ -22,6 +30,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.memory = 4096
+    vb.cpus = 2
+    vb.gui = false
   end
 end
