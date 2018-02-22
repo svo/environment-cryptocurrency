@@ -1,142 +1,69 @@
+- name: Add ethereum repositories
+  apt_repository: repo={{ item }} update_cache=yes
+  become: yes
+  with_items:
+  - ppa:ethereum/ethereum
 
-    - name: Add ethereum repositories
-      apt_repository: repo={{ item }} update_cache=yes
-      become: yes
-      with_items:
-      - ppa:ethereum/ethereum
+- name: Create Installs directory
+  file: path=~/Installs state=directory
 
-    - name: Install base packages
-      apt: pkg={{ item }}
-      become: yes
-      with_items:
-      - automake
-      - build-essential
-      - cmake
-      - libboost-all-dev
-      - libcurl4-gnutls-dev
-      - libffi-dev
-      - libgmp-dev
-      - libgstreamer0.10-0
-      - libgstreamer-plugins-base0.10-0
-      - libjansson-dev
-      - libjsoncpp-dev
-      - libjsonrpccpp-dev
-      - libleveldb-dev
-      - libmicrohttpd-dev
-      - libqrencode-dev
-      - libreadline-dev
-      - libssl-dev
-      - libxcomposite1
-      - libxrender1
-      - libxslt1-dev
-      - mesa-common-dev
-      - ocl-icd-libopencl1
-      - opencl-headers
-      - python3
-      - python3-dev
-      - python-dev
-      - python-gpgme
-      - python-pip
-      - python-software-properties
+- name: Symlink ~/Installs
+  file: src=~/Installs dest=/tmp/Installs state=link
 
-    - name: Create Installs directory
-      file: path=~/Installs state=directory
+- name: Download Ethereum wallet
+  get_url: url=https://github.com/ethereum/mist/releases/download/v0.9.3/Ethereum-Wallet-linux64-0-9-3.deb dest=~/Installs/Ethereum-Wallet-linux64-0-9-3.deb checksum=sha256:946b4b7dec1b6f2b58b6ef21d06a12dcee691fa2186baad7d99872f94240ced8
+  register: get_url_result
+  until: get_url_result | succeeded
+  retries: 3
+  delay: 1
 
-    - name: Symlink ~/Installs
-      file: src=~/Installs dest=/tmp/Installs state=link
+- name: Install Ethereum wallet
+  apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-9-3.deb
+  become: yes
 
-    - name: Download Ethereum wallet
-      get_url: url=https://github.com/ethereum/mist/releases/download/v0.9.3/Ethereum-Wallet-linux64-0-9-3.deb dest=~/Installs/Ethereum-Wallet-linux64-0-9-3.deb checksum=sha256:946b4b7dec1b6f2b58b6ef21d06a12dcee691fa2186baad7d99872f94240ced8
-      register: get_url_result
-      until: get_url_result | succeeded
-      retries: 3
-      delay: 1
+- name: Download Factom
+  get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} checksum={{ item.sha }}
+  with_items:
+  - {url: "https://github.com/FactomProject/distribution/releases/download/v0.4.2.2/factom-amd64.deb", name: factom-amd64.deb, sha: "sha256:e7cb8c24bec50362e118ebc14f530a705a62a582c60ecfd8be3ba85f8cc8003e"}
+  - {url: "https://github.com/FactomProject/distribution/releases/download/v0.4.2.1/enterprise-wallet-setup-amd64.deb", name: enterprise-wallet-setup-amd64.deb, sha: "sha256:31d563deae91513e9fdede8a7a57754f0c112de0a4ec3947de99f5793d6ec33c"}
+  register: get_url_result
+  until: get_url_result | succeeded
+  retries: 3
+  delay: 1
 
-    - name: Install Ethereum wallet
-      apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-9-3.deb
-      become: yes
+- name: Install Factom
+  apt: deb=/tmp/Installs/{{ item }}
+  become: yes
+  with_items:
+  - factom-amd64.deb
+  - enterprise-wallet-setup-amd64.deb
 
-    - name: Download Factom
-      get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} checksum={{ item.sha }}
-      with_items:
-      - {url: "https://github.com/FactomProject/distribution/releases/download/v0.4.2.2/factom-amd64.deb", name: factom-amd64.deb, sha: "sha256:e7cb8c24bec50362e118ebc14f530a705a62a582c60ecfd8be3ba85f8cc8003e"}
-      - {url: "https://github.com/FactomProject/distribution/releases/download/v0.4.2.1/enterprise-wallet-setup-amd64.deb", name: enterprise-wallet-setup-amd64.deb, sha: "sha256:31d563deae91513e9fdede8a7a57754f0c112de0a4ec3947de99f5793d6ec33c"}
-      register: get_url_result
-      until: get_url_result | succeeded
-      retries: 3
-      delay: 1
+- name: Download VeriCoin installer
+  get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} mode=a+x
+  with_items:
+    - {url: "http://www.vericoin.info/downloads/VeriCoin_1.7_64bit.run", name: VeriCoin_1.7_64bit.run}
+    - {url: "http://www.vericoin.info/downloads/Verium_1.1_64bit.run", name: Verium_1.1_64bit.run}
 
-    - name: Install Factom
-      apt: deb=/tmp/Installs/{{ item }}
-      become: yes
-      with_items:
-      - factom-amd64.deb
-      - enterprise-wallet-setup-amd64.deb
+  register: get_url_result
+  until: get_url_result | succeeded
+  retries: 3
+  delay: 1
 
-    - name: Download VeriCoin installer
-      get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} mode=a+x
-      with_items:
-        - {url: "http://www.vericoin.info/downloads/VeriCoin_1.7_64bit.run", name: VeriCoin_1.7_64bit.run}
-        - {url: "http://www.vericoin.info/downloads/Verium_1.1_64bit.run", name: Verium_1.1_64bit.run}
+- name: Install ethereum CLI tools
+  apt: pkg={{ item }}
+  become: yes
+  with_items:
+  - ethereum
 
-      register: get_url_result
-      until: get_url_result | succeeded
-      retries: 3
-      delay: 1
+- name: Download Waves wallet
+  get_url: url=https://github.com/wavesplatform/WavesGUI/releases/download/v0.4.34/waves-lite-client-mainnet-v0.4.34.zip dest=~/Installs/waves-lite-client-mainnet-v0.4.34.zip
+  register: waves_get_url_result
+  until: waves_get_url_result | succeeded
+  retries: 3
+  delay: 1
 
-    - name: Install CryptoPP
-      apt: pkg={{ item }}
-      become: yes
-      with_items:
-      - libcryptopp-utils
-      - libcryptopp-dev
+- name: Create Waves wallet directory
+  file: path=~/waves state=directory
 
-    - name: Install ethereum CLI tools
-      apt: pkg={{ item }}
-      become: yes
-      with_items:
-      - ethereum
-
-    - name: Get cpuminer-opt
-      git: repo=https://github.com/JayDDee/cpuminer-opt.git dest=~/cpuminer-opt force=yes
-
-    - name: Build cpuminer
-      command: ./build.sh chdir=~/cpuminer-opt
-
-    - name: Get DASH wallet
-      get_url: url=https://www.dash.org/binaries/dashcore-0.12.1.5-linux64.tar.gz dest=~/Installs/dashcore-0.12.1.5-linux64.tar.gz
-      register: dash_get_url_result
-      until: dash_get_url_result | succeeded
-      retries: 3
-      delay: 1
-
-    - name: Extract DASH wallet
-      unarchive: src=~/Installs/dashcore-0.12.1.5-linux64.tar.gz remote_src=yes dest=~/
-
-    - name: Download Storj GUI
-      get_url: url=https://github.com/Storj/storjshare-gui/releases/download/v5.1.0/storjshare-gui.amd64.deb dest=~/Installs/storjshare-gui.amd64.deb checksum=sha256:ace4dd7063e7419ffa6074185f2b3e91a5c31992987c31849cf1e9502765cfa7
-      register: get_url_result
-      until: get_url_result | succeeded
-      retries: 3
-      delay: 1
-
-    - name: Install Storj GUI
-      apt: deb=/tmp/Installs/storjshare-gui.amd64.deb
-      become: yes
-
-    - name: Install Storj Daemon
-      command: snap install storjshare
-      become: yes
-
-    - name: Download Waves wallet
-      get_url: url=https://github.com/wavesplatform/WavesGUI/releases/download/v0.4.34/waves-lite-client-mainnet-v0.4.34.zip dest=~/Installs/waves-lite-client-mainnet-v0.4.34.zip
-      register: waves_get_url_result
-      until: waves_get_url_result | succeeded
-      retries: 3
-      delay: 1
-
-    - name: Create Waves wallet directory
-      file: path=~/waves state=directory
-
-    - name: Extract Waves wallet
-      unarchive: src=~/Installs/waves-lite-client-mainnet-v0.4.34.zip remote_src=yes dest=~/waves
+- name: Extract Waves wallet
+  unarchive: src=~/Installs/waves-lite-client-mainnet-v0.4.34.zip remote_src=yes dest=~/waves
