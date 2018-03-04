@@ -1,13 +1,20 @@
 ---
 - hosts: all
 
-  tasks:
+  pre_tasks:
 
     - name: Install common dependencies
       apt: pkg={{ item }}
       become: yes
       with_items:
       - python
+      - htop
+      - smem
+      - iftop
+      - iotop
+      - whois
+      - ncdu
+      - wondershaper
 
   roles:
     - .
