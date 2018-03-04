@@ -1,5 +1,13 @@
 ---
 - hosts: all
 
+  tasks:
+
+    - name: Install common dependencies
+      apt: pkg={{ item }}
+      become: yes
+      with_items:
+      - python
+
   roles:
     - .

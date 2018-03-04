@@ -55,6 +55,10 @@
   with_items:
   - ethereum
 
+- name: Install unzip
+  apt: pkg=unzip
+  become: yes
+
 - name: Download Waves wallet
   get_url: url=https://github.com/wavesplatform/WavesGUI/releases/download/v0.4.34/waves-lite-client-mainnet-v0.4.34.zip dest=~/Installs/waves-lite-client-mainnet-v0.4.34.zip
   register: waves_get_url_result
