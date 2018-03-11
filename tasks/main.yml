@@ -60,14 +60,12 @@
   become: yes
 
 - name: Download Waves wallet
-  get_url: url=https://github.com/wavesplatform/WavesGUI/releases/download/v0.4.34/waves-lite-client-mainnet-v0.4.34.zip dest=~/Installs/waves-lite-client-mainnet-v0.4.34.zip
+  get_url: url=https://wavesplatform.com/files/WavesClient-1.0.0-beta.X-linux.deb dest=~/Installs/WavesClient-1.0.0-beta.X-linux.deb
   register: waves_get_url_result
   until: waves_get_url_result | succeeded
   retries: 3
   delay: 1
 
-- name: Create Waves wallet directory
-  file: path=~/waves state=directory
-
-- name: Extract Waves wallet
-  unarchive: src=~/Installs/waves-lite-client-mainnet-v0.4.34.zip remote_src=yes dest=~/waves
+- name: Install Waves client
+  apt: deb=/tmp/Installs/WavesClient-1.0.0-beta.X-linux.deb
+  become: yes
