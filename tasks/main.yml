@@ -60,7 +60,7 @@
   become: yes
 
 - name: Download Waves wallet
-  get_url: url=https://wavesplatform.com/files/WavesClient-1.0.0-beta.X-linux.deb dest=~/Installs/WavesClient-1.0.0-beta.X-linux.deb
+  get_url: url=https://wavesplatform.com/files/WavesClient-1.0.0-beta.X-linux.deb dest=~/Installs/WavesClient-1.0.0-beta.X-linux.deb checksum="sha256:35859381d98521304eb9280316667d440ac0e179a8f31b3c177e8658f41a213d"
   register: waves_get_url_result
   until: waves_get_url_result | succeeded
   retries: 3
