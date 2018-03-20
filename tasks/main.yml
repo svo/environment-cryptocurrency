@@ -69,3 +69,13 @@
 - name: Install Waves client
   apt: deb=/tmp/Installs/WavesClient-1.0.0-beta.X-linux.deb
   become: yes
+
+- name: Download Wagerr wallet
+  get_url: url=https://github.com/wagerr/wagerr/releases/download/v1.4.34.2/wagerr-1.4.34.2-x86_64-linux-gnu.tar.gz dest=~/Installs/wagerr-1.4.34.2-x86_64-linux-gnu.tar.gz
+  register: wagerr_get_url_result
+  until: wagerr_get_url_result | succeeded
+  retries: 3
+  delay: 1
+
+- name: Extract Wagerr wallet
+  unarchive: src=~/Installs/wagerr-1.4.34.2-x86_64-linux-gnu.tar.gz remote_src=yes dest=~/Installs
