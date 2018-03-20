@@ -79,3 +79,10 @@
 
 - name: Extract Wagerr wallet
   unarchive: src=~/Installs/wagerr-1.4.34.2-x86_64-linux-gnu.tar.gz remote_src=yes dest=~/Installs
+
+- name: Download CryptoInsight
+  get_url: url=https://github.com/cryptoinsightio/cryptoinsight-client/releases/download/1.0.2/CryptoInsight-1-0-2.AppImage dest=~/Installs/CryptoInsight-1-0-2.AppImage mode=u+rwx checksum=sha256:38ade55d6631ede28448aa66023eb3cb4553442057ad78632e6d28a078d8b3ff
+  register: cryptoinsight_get_url_result
+  until: cryptoinsight_get_url_result | succeeded
+  retries: 3
+  delay: 1
