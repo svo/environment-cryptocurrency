@@ -39,10 +39,10 @@
   - enterprise-wallet-setup-amd64.deb
 
 - name: Download VeriCoin installer
-  get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} mode=a+x
+  get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} checksum={{ item.sha }}  mode=a+x
   with_items:
-    - {url: "http://www.vericoin.info/downloads/VeriCoin_1.7_64bit.run", name: VeriCoin_1.7_64bit.run}
-    - {url: "http://www.vericoin.info/downloads/Verium_1.1_64bit.run", name: Verium_1.1_64bit.run}
+    - {url: "http://www.vericoin.info/downloads/VeriCoin_1.7_64bit.run", name: VeriCoin_1.7_64bit.run, sha: "sha256:5a3e0a8382071d5e7270f120c98892aab92656823df5aa38bff6de51f3f2e565"}
+    - {url: "http://www.vericoin.info/downloads/Verium_1.1_64bit.run", name: Verium_1.1_64bit.run, sha: "sha256:fb7fe25384c0a4b99c6cb38ba2290719065f4beab4b8bac105111513d037766d"}
 
   register: get_url_result
   until: get_url_result | succeeded
