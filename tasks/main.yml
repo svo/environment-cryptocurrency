@@ -71,7 +71,7 @@
   become: yes
 
 - name: Download Wagerr wallet
-  get_url: url=https://github.com/wagerr/wagerr/releases/download/v1.4.34.2/wagerr-1.4.34.2-x86_64-linux-gnu.tar.gz dest=~/Installs/wagerr-1.4.34.2-x86_64-linux-gnu.tar.gz
+  get_url: url=https://github.com/wagerr/wagerr/releases/download/v1.4.34.2/wagerr-1.4.34.2-x86_64-linux-gnu.tar.gz dest=~/Installs/wagerr-1.4.34.2-x86_64-linux-gnu.tar.gz checksum="sha256:237bd6f51ba0e9e77d20080cb942dd4ce989f6a55a89862bcfd740c684208ea9"
   register: wagerr_get_url_result
   until: wagerr_get_url_result | succeeded
   retries: 3
