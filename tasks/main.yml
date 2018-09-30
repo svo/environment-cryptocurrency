@@ -41,8 +41,8 @@
 - name: Download VeriCoin installer
   get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} checksum={{ item.sha }}  mode=a+x
   with_items:
-    - {url: "http://www.vericoin.info/downloads/VeriCoin_1.7_64bit.run", name: VeriCoin_1.7_64bit.run, sha: "sha256:5a3e0a8382071d5e7270f120c98892aab92656823df5aa38bff6de51f3f2e565"}
-    - {url: "http://www.vericoin.info/downloads/Verium_1.1_64bit.run", name: Verium_1.1_64bit.run, sha: "sha256:fb7fe25384c0a4b99c6cb38ba2290719065f4beab4b8bac105111513d037766d"}
+    - {url: "https://cdn.vericonomy.com/vericoin/VeriCoin_1.7.2_64bit.run", name: VeriCoin_1.7.2_64bit.run, sha: "sha256:27c7a55216b54353035418362ebcb2d8a73d6683163fa4dfe7e1359969862a77"}
+    - {url: "https://cdn.vericonomy.com/verium/Verium_1.2_64bit.run", name: Verium_1.2_64bit.run, sha: "sha256:d5766fecd86c3a04d718caf74efe548fb47d47a33c0c6e771ff58410abac6ca4"}
 
   register: get_url_result
   until: get_url_result | succeeded
