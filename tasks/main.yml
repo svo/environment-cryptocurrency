@@ -89,14 +89,14 @@
   become: yes
 
 - name: Download Wagerr wallet
-  get_url: url=https://github.com/wagerr/wagerr/releases/download/v2.0.0/wagerr-2.0.0-x86_64-linux-gnu.tar.gz dest=~/Installs/wagerr-2.0.0-x86_64-linux-gnu.tar.gz checksum="sha256:dfb34702869692b867968687e9e9891935296fc207c529991b9bfd525da8fb3c"
+  get_url: url=https://github.com/wagerr/wagerr/releases/download/v2.0.2/wagerr-2.0.2-x86_64-linux-gnu.tar.gz dest=~/Installs/wagerr-2.0.2-x86_64-linux-gnu.tar.gz checksum="sha256:883b1873d8624b08535cc3f4377446d9f5ad57c12a4177aa94095c1d440262c7"
   register: wagerr_get_url_result
   until: wagerr_get_url_result | succeeded
   retries: 3
   delay: 1
 
 - name: Extract Wagerr wallet
-  unarchive: src=~/Installs/wagerr-2.0.0-x86_64-linux-gnu.tar.gz remote_src=yes dest=~/Installs
+  unarchive: src=~/Installs/wagerr-2.0.2-x86_64-linux-gnu.tar.gz remote_src=yes dest=~/Installs
 
 - name: Download CryptoInsight
   get_url: url=https://github.com/cryptoinsightio/cryptoinsight-client/releases/download/1.0.2/CryptoInsight-1-0-2.AppImage dest=~/Installs/CryptoInsight-1-0-2.AppImage mode=u+rwx checksum=sha256:38ade55d6631ede28448aa66023eb3cb4553442057ad78632e6d28a078d8b3ff
