@@ -11,14 +11,14 @@
   file: src=~/Installs dest=/tmp/Installs state=link
 
 - name: Download Ethereum wallet
-  get_url: url=https://github.com/ethereum/mist/releases/download/v0.9.3/Ethereum-Wallet-linux64-0-9-3.deb dest=~/Installs/Ethereum-Wallet-linux64-0-9-3.deb checksum=sha256:946b4b7dec1b6f2b58b6ef21d06a12dcee691fa2186baad7d99872f94240ced8
+  get_url: url=https://github.com/ethereum/mist/releases/download/v0.11.1/Ethereum-Wallet-linux64-0-11-1.deb dest=~/Installs/Ethereum-Wallet-linux64-0-11-1.deb checksum=sha256:1abca9b43983e63df3514307fa4317baa7e9604e64136263fd44544d03a12c6d
   register: get_url_result
   until: get_url_result | succeeded
   retries: 3
   delay: 1
 
 - name: Install Ethereum wallet
-  apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-9-3.deb
+  apt: deb=/tmp/Installs/Ethereum-Wallet-linux64-0-11-1.deb
   become: yes
 
 - name: Download Factom
