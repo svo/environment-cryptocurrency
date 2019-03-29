@@ -104,3 +104,14 @@
   until: cryptoinsight_get_url_result | succeeded
   retries: 3
   delay: 1
+
+- name: Download Tezos wallet
+  get_url: url=https://cryptonomic-wallet.nyc3.digitaloceanspaces.com/release_0.7.0b/Galleon_0.7.0-b_mainnet.deb dest=~/Installs/Galleon_0.7.0-b_mainnet.deb checksum=sha256:1bc4a502d9efe34893109ea91f6b65414502a35554784c8eca9b12ac3c6eea23
+  register: tezos_get_url_result
+  until: tezos_get_url_result | succeeded
+  retries: 3
+  delay: 1
+
+- name: Install Tezos wallet
+  apt: deb=/tmp/Installs/Galleon_0.7.0-b_mainnet.deb
+  become: yes
