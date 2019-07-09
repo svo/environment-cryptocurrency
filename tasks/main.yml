@@ -1,9 +1,3 @@
-- name: Add ethereum repositories
-  apt_repository: repo={{ item }} update_cache=yes
-  become: yes
-  with_items:
-  - ppa:ethereum/ethereum
-
 - name: Create Installs directory
   file: path=~/Installs state=directory
 
@@ -24,7 +18,7 @@
 - name: Download Factom
   get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} checksum={{ item.sha }}
   with_items:
-  - {url: "https://github.com/FactomProject/distribution/releases/download/v5.4.3/factom-amd64.deb", name: factom-amd64.deb, sha: "sha256:4c82f004f498cb710fd58b8a3bbcef45694e6bdb0d1b91157f0318f7f79649a2"}
+  - {url: "https://github.com/FactomProject/distribution/releases/download/v6.1.0/factom-amd64.deb", name: factom-amd64.deb, sha: "sha256:6688accf975375aa81863d5bca144b66d72e78ba2896044ff3e901e83b0b6246"}
   - {url: "https://github.com/FactomProject/enterprise-wallet/archive/v0.2.0.0.zip", name: enterprise-wallet-v0.2.0.0.zip, sha: "sha256:2637bfef6dc98a49bcedbc4f771279e997a81944c0f8663b4243862e7daa45e1"}
   register: get_url_result
   until: get_url_result | succeeded
@@ -51,6 +45,7 @@
   apt: pkg={{ item }}
   become: yes
   with_items:
+    - git
     - build-essential
     - libboost-dev
     - libboost-system-dev
@@ -63,29 +58,22 @@
     - libminiupnpc-dev
     - libboost-all-dev
     - libqrencode-dev
-    - freeglut3-dev
-    - git
+    - libcurl4-gnutls-dev
     - libminizip-dev
-
-- name: Install ethereum CLI tools
-  apt: pkg={{ item }} update_cache=yes
-  become: yes
-  with_items:
-  - ethereum
 
 - name: Install unzip
   apt: pkg=unzip
   become: yes
 
 - name: Download Waves wallet
-  get_url: url=https://wavesplatform.com/files/WavesClient-1.0.8-linux.deb dest=~/Installs/WavesClient-1.0.8-linux.deb checksum="sha256:2388b4106c1163371d5270b41f73a25331319c3575e1ee197292bf5f8de2cbba"
+  get_url: url=https://wavesplatform.com/files/WavesDEX-linux.deb dest=~/Installs/WavesDEX-linux.deb checksum="sha256:c7e7c534de98b777942112561c23e4f175203167d7eb486c96ad83821df38991"
   register: waves_get_url_result
   until: waves_get_url_result | succeeded
   retries: 3
   delay: 1
 
 - name: Install Waves client
-  apt: deb=/tmp/Installs/WavesClient-1.0.8-linux.deb
+  apt: deb=/tmp/Installs/WavesDEX-linux.deb
   become: yes
 
 - name: Download Wagerr wallet
@@ -98,20 +86,13 @@
 - name: Extract Wagerr wallet
   unarchive: src=~/Installs/wagerr-2.0.2-x86_64-linux-gnu.tar.gz remote_src=yes dest=~/Installs
 
-- name: Download CryptoInsight
-  get_url: url=https://github.com/cryptoinsightio/cryptoinsight-client/releases/download/1.0.2/CryptoInsight-1-0-2.AppImage dest=~/Installs/CryptoInsight-1-0-2.AppImage mode=u+rwx checksum=sha256:38ade55d6631ede28448aa66023eb3cb4553442057ad78632e6d28a078d8b3ff
-  register: cryptoinsight_get_url_result
-  until: cryptoinsight_get_url_result | succeeded
-  retries: 3
-  delay: 1
-
 - name: Download Tezos wallet
-  get_url: url=https://cryptonomic-wallet.nyc3.digitaloceanspaces.com/release_0.7.0b/Galleon_0.7.0-b_mainnet.deb dest=~/Installs/Galleon_0.7.0-b_mainnet.deb checksum=sha256:1bc4a502d9efe34893109ea91f6b65414502a35554784c8eca9b12ac3c6eea23
+  get_url: url=https://cryptonomic-wallet.nyc3.digitaloceanspaces.com/release_0.8.2b/Galleon-0.8.2-b.deb dest=~/Installs/Galleon_0.8.2-b_mainnet.deb checksum=sha256:7519b6ca3bbc6f28f87326e67011079d8f7365e3f4d28032c172e2db0599983e
   register: tezos_get_url_result
   until: tezos_get_url_result | succeeded
   retries: 3
   delay: 1
 
 - name: Install Tezos wallet
-  apt: deb=/tmp/Installs/Galleon_0.7.0-b_mainnet.deb
+  apt: deb=/tmp/Installs/Galleon_0.8.2-b_mainnet.deb
   become: yes
