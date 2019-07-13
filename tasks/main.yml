@@ -34,8 +34,8 @@
 - name: Download VeriCoin installer
   get_url: url={{ item.url }} dest=~/Installs/{{ item.name }} checksum={{ item.sha }}  mode=a+x
   with_items:
-    - {url: "https://cdn.vericonomy.com/vericoin/VeriCoin_1.7.2_64bit.run", name: VeriCoin_1.7.2_64bit.run, sha: "sha256:27c7a55216b54353035418362ebcb2d8a73d6683163fa4dfe7e1359969862a77"}
-    - {url: "https://cdn.vericonomy.com/verium/Verium_1.2_64bit.run", name: Verium_1.2_64bit.run, sha: "sha256:d5766fecd86c3a04d718caf74efe548fb47d47a33c0c6e771ff58410abac6ca4"}
+  - {url: "https://cdn.vericonomy.com/vericoin/VeriCoin_1.7.2_64bit.run", name: VeriCoin_1.7.2_64bit.run, sha: "sha256:27c7a55216b54353035418362ebcb2d8a73d6683163fa4dfe7e1359969862a77"}
+  - {url: "https://cdn.vericonomy.com/verium/Verium_1.2_64bit.run", name: Verium_1.2_64bit.run, sha: "sha256:d5766fecd86c3a04d718caf74efe548fb47d47a33c0c6e771ff58410abac6ca4"}
   register: get_url_result
   until: get_url_result | succeeded
   retries: 3
@@ -45,21 +45,20 @@
   apt: pkg={{ item }}
   become: yes
   with_items:
-    - git
-    - build-essential
-    - libboost-dev
-    - libboost-system-dev
-    - libboost-filesystem-dev
-    - libcurl4-openssl-dev
-    - libboost-thread-dev
-    - libssl-dev
-    - libdb++-dev
-    - libboost-program-options-dev
-    - libminiupnpc-dev
-    - libboost-all-dev
-    - libqrencode-dev
-    - libcurl4-gnutls-dev
-    - libminizip-dev
+  - git
+  - build-essential
+  - libboost-dev
+  - libboost-system-dev
+  - libboost-filesystem-dev
+  - libboost-program-options-dev
+  - libboost-thread-dev
+  - libssl-dev
+  - libdb++-dev
+  - libminiupnpc-dev
+  - libboost-all-dev
+  - libqrencode-dev
+  - libcurl4-gnutls-dev
+  - libminizip-dev
 
 - name: Install unzip
   apt: pkg=unzip
